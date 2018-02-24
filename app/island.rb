@@ -1,8 +1,8 @@
-class Island
-  SOUP_SIZE = 1000
+require_relative 'soup'
 
+class Island
   def initialize
-    @soup = Array.new(SOUP_SIZE, -1)
+    @soup = Soup.new
   end
 
   def tick
