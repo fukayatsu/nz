@@ -1,0 +1,1 @@
+- [Tierra 入門](http://web.archive.org/web/20001202002200/http://www.hip.atr.co.jp/~kim/TIERRA/tierra.html)
