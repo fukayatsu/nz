@@ -52,9 +52,13 @@ class Code
     @opcode =
       if instruction.is_a?(Symbol)
         INSTRUCTIONS.index(instruction)
-      else
+      elsif 0 <= instruction && instruction <= 31
         instruction
       end
+
+    unless @opcode
+      raise "Invalid instruction: #{instruction}"
+    end
   end
 
   def opname
@@ -62,6 +66,8 @@ class Code
   end
 
   def apply(life)
+    puts
+    puts "[debug][apply] #{opname}"
     case opname
     when :pushax
       life.stack.push life.ax
@@ -204,10 +210,13 @@ class Code
       else
         @error = true
       end
-    when :devide
+    when :divide
+      # FIXME: 何故か@daughter_rangeがnilになる
       daughter = Life.new(map: life.map, ip: @daughter_range.first, gene: life.map(@daughter_range))
       @daughter_range = nil
-      daughter
+      life.ip += 1
+      life.error! unless life.range.include?(life.ip)
+      return daughter
     end
 
     life.ip += 1

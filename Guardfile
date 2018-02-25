@@ -7,7 +7,11 @@ guard "rspec", cmd: "bundle exec rspec" do
   watch(rspec.spec_support) { rspec.spec_dir }
   watch(rspec.spec_files)
 
-  watch(%r(app/(.*?).rb)) { |file|
-    "spec/#{file[1]}_spec.rb"
-  }
+  watch(%r(app/(.*?).rb)) do |file|
+    if file[1] == 'life'
+      "spec/soup_spec.rb"
+    else
+      "spec/#{file[1]}_spec.rb"
+    end
+  end
 end

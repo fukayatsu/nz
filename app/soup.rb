@@ -1,7 +1,7 @@
 require_relative 'life'
 
 class Soup
-  MAX_SIZE = 100
+  MAX_SIZE = 200
 
   def initialize
     @map = Array.new(MAX_SIZE)
@@ -13,9 +13,9 @@ class Soup
   end
 
   def tick(step)
-    step.times do
+    step.times do |step|
+      puts "[debug] step: #{step}"
       tick_one_step
-
       break if @lives.all?(&:error?)
     end
   end
@@ -23,10 +23,14 @@ class Soup
   def tick_one_step
     daughters = []
     @lives.each do |life|
-      life.debug_print
       next if life.error?
       daughter = life.tick
-      daughters.push(daughter) if daughter
+      life.debug_print
+      if daughter
+        require "pry"; binding.pry
+        puts "new life"
+        daughters.push(daughter)
+      end
     end
     @lives += daughters
   end
