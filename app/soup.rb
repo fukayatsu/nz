@@ -4,7 +4,7 @@ class Soup
   DEFAULT_SIZE = 1000
 
   def initialize(size: DEFAULT_SIZE)
-    @map = Array.new(size, -1)
+    @map = Array.new(size)
     @lives = [Life.create_origin(@map, at: size/2)]
   end
 
@@ -17,6 +17,7 @@ class Soup
   end
 
   def tick_one_step
+    require "pry"; binding.pry
     daughters = @lives.map { |life| life.tick }.compact
     @lives += daughters
   end

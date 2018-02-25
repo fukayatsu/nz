@@ -34,7 +34,7 @@ RSpec.describe Code do
     let(:instruction) { |ex| ex.metadata[:example_group][:description].to_sym }
     let(:code) { described_class.new(instruction) }
     let(:map)  { [] }
-    let(:life) { Life.new(map: map, ip: 1) }
+    let(:life) { Life.new(map: map, ip: 1, gene:[]) }
 
     subject(:applied) { code.apply(life); life }
 
@@ -267,7 +267,7 @@ RSpec.describe Code do
 
       # :jmp,  # (jump to template)
       context 'jmp' do
-        let(:life) { Life.new(map: [-1, -1, 0, 1, 0, 0, -1, 1, 0, 1, 1, -1], ip: 1) }
+        let(:life) { Life.new(map: [-1, -1, 0, 1, 0, 0, -1, 1, 0, 1, 1, -1], ip: 1, gene:[]) }
         it do
           code.apply(life)
           expect(life.ip).to eq(life.map.size - 1)
@@ -276,7 +276,7 @@ RSpec.describe Code do
 
       # :jmpb, # (jump backwards to template)
       context 'jmpb' do
-        let(:life) { Life.new(map: [-1, 0, 1, 0, 0, -1, -1, -1, 1, 0, 1, 1, -1], ip: 8) }
+        let(:life) { Life.new(map: [-1, 0, 1, 0, 0, -1, -1, -1, 1, 0, 1, 1, -1], ip: 8, gene:[]) }
         it do
           code.apply(life)
           expect(life.ip).to eq(5)
@@ -285,7 +285,7 @@ RSpec.describe Code do
 
       # :call, # (push IP onto the stack, jump to template)
       context 'call' do
-        let(:life) { Life.new(map: [-1, -1, 0, 0, 0, 0, -1, 1, 1, 1, 1, -1], ip: 1) }
+        let(:life) { Life.new(map: [-1, -1, 0, 0, 0, 0, -1, 1, 1, 1, 1, -1], ip: 1, gene:[]) }
         it do
           code.apply(life)
           expect(life.stack).to eq [1]
@@ -295,7 +295,7 @@ RSpec.describe Code do
 
       # :ret,  # (pop the stack into the IP)
       context 'ret' do
-        let(:life) { Life.new(map: [], ip: 0) }
+        let(:life) { Life.new(map: [], ip: 0, gene:[]) }
         it do
           life.stack = [9]
           code.apply(life)
@@ -307,7 +307,7 @@ RSpec.describe Code do
       # Biological and Sensory: 5
       # :adr,    #(search outward  for template, put address in AX, template size in CX)
       context 'adr' do
-        let(:life) { Life.new(map: [-1, -1, 0, 1, 0, 0, -1, -1, -1, 1, 0, 1, 1, -1], ip: 8) }
+        let(:life) { Life.new(map: [-1, -1, 0, 1, 0, 0, -1, -1, -1, 1, 0, 1, 1, -1], ip: 8, gene:[]) }
         it do
           expect(applied.ax).to eq 2
           expect(applied.cx).to eq 4
@@ -316,7 +316,7 @@ RSpec.describe Code do
 
       # :adrb,   #(search backward for template, put address in AX, template size in CX)
       context 'adrb' do
-        let(:life) { Life.new(map: [-1, -1, 0, 1, 0, 0, -1, -1, -1, 1, 0, 1, 1, -1], ip: 8) }
+        let(:life) { Life.new(map: [-1, -1, 0, 1, 0, 0, -1, -1, -1, 1, 0, 1, 1, -1], ip: 8, gene:[]) }
         it do
           expect(applied.ax).to eq 2
           expect(applied.cx).to eq 4
@@ -325,7 +325,7 @@ RSpec.describe Code do
 
       # :adrf,   #(search forward  for template, put address in AX, template size in CX)
       context 'adrf' do
-        let(:life) { Life.new(map: [-1, -1, 0, 1, 0, 0, -1, -1, -1, 1, 0, 1, 1, -1], ip: 1) }
+        let(:life) { Life.new(map: [-1, -1, 0, 1, 0, 0, -1, -1, -1, 1, 0, 1, 1, -1], ip: 1, gene:[]) }
         it do
           expect(applied.ax).to eq 9
           expect(applied.cx).to eq 4
@@ -333,6 +333,16 @@ RSpec.describe Code do
       end
 
       # :mal,    #(allocate amount of space specified in CX)
+      context 'mal' do
+        let(:life) { Life.new(map: [-1, 0, 0, 0, nil, -1, nil, nil, nil, nil], ip: 1, gene: [0, 0, 0]) }
+        it do
+          life.cx = 3
+          code.apply(life)
+          expect(life.ax).to eq 6
+          expect(life.map).to eq [-1, 0, 0, 0, nil, -1, -1, -1, -1, nil]
+        end
+      end
+
       # :divide, #(cell division)
     end
   end

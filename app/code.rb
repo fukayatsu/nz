@@ -190,6 +190,19 @@ class Code
       else
         @error = true
       end
+    when :mal
+      index = life.map.index.with_index do |_, i|
+        life.map[i..(i + life.cx)].all?(&:nil?)
+      end
+
+      if index
+        life.ax = index
+        (index...(index+life.cx)).each do |i|
+          life.map[i] = -1
+        end
+      else
+        @error = true
+      end
     end
 
     life.ip += 1
