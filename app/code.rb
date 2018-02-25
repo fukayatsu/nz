@@ -164,9 +164,9 @@ class Code
         offset_f ||= SEARCH_RANGE
         offset_b ||= SEARCH_RANGE
         if offset_f < offset_b
-          life.ax = i + offset_f
+          life.ax = i + offset_f + template.size
         else
-          life.ax = i - offset_b - template.size
+          life.ax = i - offset_b
         end
         life.cx = template.size
       else
@@ -177,7 +177,7 @@ class Code
       template = find_template(life.map, i)
       offset = template_offset(life.map[i..i+SEARCH_RANGE], template)
       if offset
-        life.ax = i + offset
+        life.ax = i + offset + template.size
         life.cx = template.size
       else
         life.error!
@@ -191,13 +191,12 @@ class Code
       offset = template_offset(life.map[start..life.ip].reverse, template.reverse)
 
       if offset
-        life.ax = i - offset - template.size
+        life.ax = i - offset
         life.cx = template.size
       else
         life.error!
       end
     when :mal
-      require "pry"; binding.pry
       index = life.map.index.with_index do |_, i|
         life.map[i..(i + life.cx)].all?(&:nil?)
       end

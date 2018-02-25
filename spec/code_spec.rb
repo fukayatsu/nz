@@ -309,7 +309,7 @@ RSpec.describe Code do
       context 'adr' do
         let(:life) { Life.new(map: [-1, -1, 0, 1, 0, 0, -1, -1, -1, 1, 0, 1, 1, -1], ip: 8, gene:[]) }
         it do
-          expect(applied.ax).to eq 2
+          expect(applied.ax).to eq 6
           expect(applied.cx).to eq 4
         end
       end
@@ -318,7 +318,7 @@ RSpec.describe Code do
       context 'adrb' do
         let(:life) { Life.new(map: [-1, -1, 0, 1, 0, 0, -1, -1, -1, 1, 0, 1, 1, -1], ip: 8, gene:[]) }
         it do
-          expect(applied.ax).to eq 2
+          expect(applied.ax).to eq 6
           expect(applied.cx).to eq 4
         end
       end
@@ -327,7 +327,7 @@ RSpec.describe Code do
       context 'adrf' do
         let(:life) { Life.new(map: [-1, -1, 0, 1, 0, 0, -1, -1, -1, 1, 0, 1, 1, -1], ip: 1, gene:[]) }
         it do
-          expect(applied.ax).to eq 9
+          expect(applied.ax).to eq 13
           expect(applied.cx).to eq 4
         end
       end

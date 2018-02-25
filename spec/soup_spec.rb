@@ -10,7 +10,7 @@ RSpec.describe Soup do
   describe '#tick' do
     it do
       expect(soup.lives_count).to eq(1)
-      soup.tick(20)
+      soup.tick(800)
       expect(soup.lives_count).to eq(2)
     end
   end

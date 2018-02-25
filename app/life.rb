@@ -44,6 +44,7 @@ class Life
       [
         :nop1, :nop1, :nop1, :nop1, # 母セルコード開始テンプレート
           :adrb, :nop0, :nop0, :nop0, :nop0, # 母セルコード開始テンプレートと相補
+          :sub_ac,
           :movab,
           :movcd,
           :adrf, :nop0, :nop0, :nop0, :nop1, # コード終了テンプレートと相補
