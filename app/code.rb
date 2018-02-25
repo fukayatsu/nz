@@ -120,7 +120,7 @@ class Code
       if offset
         return life.ip = i + offset + template.size
       else
-        @error = true
+        life.error!
       end
     when :call
       i = life.ip + 1
@@ -132,7 +132,7 @@ class Code
           life.ip = i + offset + template.size
         return
       else
-        @error = true
+        life.error!
       end
     when :jmpb
       i = life.ip + 1
@@ -145,7 +145,7 @@ class Code
       if offset
         return life.ip = i - offset
       else
-        @error = true
+        life.error!
       end
     when :ret
       life.ip = life.stack.pop
@@ -170,7 +170,7 @@ class Code
         end
         life.cx = template.size
       else
-        @error = true
+        life.error!
       end
     when :adrf
       i = life.ip + 1
@@ -180,7 +180,7 @@ class Code
         life.ax = i + offset
         life.cx = template.size
       else
-        @error = true
+        life.error!
       end
     when :adrb
       i = life.ip + 1
@@ -194,9 +194,10 @@ class Code
         life.ax = i - offset - template.size
         life.cx = template.size
       else
-        @error = true
+        life.error!
       end
     when :mal
+      require "pry"; binding.pry
       index = life.map.index.with_index do |_, i|
         life.map[i..(i + life.cx)].all?(&:nil?)
       end
@@ -206,14 +207,13 @@ class Code
         (index...(index+life.cx)).each do |i|
           life.map[i] = -1
         end
-        @daughter_range = index...(index+life.cx)
+        life.daughter_range = index...(index+life.cx)
       else
-        @error = true
+        life.error!
       end
     when :divide
-      # FIXME: 何故か@daughter_rangeがnilになる
-      daughter = Life.new(map: life.map, ip: @daughter_range.first, gene: life.map(@daughter_range))
-      @daughter_range = nil
+      daughter = Life.new(map: life.map, ip: life.daughter_range.first, gene: life.map[life.daughter_range])
+      life.daughter_range = nil
       life.ip += 1
       life.error! unless life.range.include?(life.ip)
       return daughter

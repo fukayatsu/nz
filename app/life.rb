@@ -13,8 +13,8 @@ class Life
 
     puts "[debug] new life (size: #{gene.size})"
   end
-  attr_accessor :map, :ip, :ax, :bx, :cx, :dx, :stack
-  attr_reader :gene, :range, :daughter_range
+  attr_accessor :map, :ip, :ax, :bx, :cx, :dx, :stack, :daughter_range
+  attr_reader :gene, :range
 
   def error?
     @error
@@ -36,8 +36,9 @@ class Life
   end
 
   def debug_print
-    puts "ax: #{ax}\tbx: #{bx}\tcx: #{cx}\tdx: #{dx}"
+    puts "<Life##{self.object_id}> ax: #{ax}\tbx: #{bx}\tcx: #{cx}\tdx: #{dx}\tdaughter_range: #{daughter_range}"
   end
+
   class << self
     def default_gene
       [
