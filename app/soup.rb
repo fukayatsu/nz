@@ -1,7 +1,7 @@
 require_relative 'life'
 
 class Soup
-  MAX_SIZE = 200
+  MAX_SIZE = 1000
 
   def initialize
     @map = Array.new(MAX_SIZE)
@@ -27,8 +27,6 @@ class Soup
       daughter = life.tick
       life.debug_print
       if daughter
-        require "pry"; binding.pry
-        puts "new life"
         daughters.push(daughter)
       end
     end
