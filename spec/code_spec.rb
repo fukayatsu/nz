@@ -246,6 +246,63 @@ RSpec.describe Code do
           expect(life.cx).to eq 8
         end
       end
+
+      # Instruction Pointer Manipulation: 5
+      # :ifz,  # (if CX == 0 execute next instruction, otherwise, skip it)
+      context 'ifz' do
+        it do
+          expect(life.ip).to eq(1)
+
+          # zero
+          life.cx = 0
+          code.apply(life)
+          expect(life.ip).to eq(2)
+
+          # not zero
+          life.cx = 1
+          code.apply(life)
+          expect(life.ip).to eq(4)
+        end
+      end
+
+      # :jmp,  # (jump to template)
+      context 'jmp' do
+        let(:life) { Life.new(map: [-1, -1, 0, 1, 0, 0, -1, 1, 0, 1, 1, -1], ip: 1) }
+        it do
+          code.apply(life)
+          expect(life.ip).to eq(life.map.size - 1)
+        end
+      end
+
+      # :jmpb, # (jump backwards to template)
+      context 'jmpb' do
+        let(:life) { Life.new(map: [-1, 0, 1, 0, 0, -1, -1, -1, 1, 0, 1, 1, -1], ip: 8) }
+        it do
+          code.apply(life)
+          expect(life.ip).to eq(5)
+        end
+      end
+
+      # :call, # (push IP onto the stack, jump to template)
+      context 'call' do
+        let(:life) { Life.new(map: [-1, -1, 0, 0, 0, 0, -1, 1, 1, 1, 1, -1], ip: 1) }
+        it do
+          code.apply(life)
+          expect(life.stack).to eq [1]
+          expect(life.ip).to eq(life.map.size - 1)
+        end
+      end
+
+      # :ret,  # (pop the stack into the IP)
+      context 'ret' do
+        let(:life) { Life.new(map: [], ip: 0) }
+        it do
+          life.stack = [9]
+          code.apply(life)
+          expect(life.stack).to eq []
+          expect(life.ip).to eq(10)
+        end
+      end
     end
   end
 end

@@ -1,4 +1,5 @@
 class Code
+  SEARCH_RANGE = 300
   INSTRUCTIONS = [
     # No Operations: 2
     :nop0,
@@ -61,8 +62,6 @@ class Code
   end
 
   def apply(life)
-    life.ip += 1
-
     case opname
     when :pushax
       life.stack.push life.ax
@@ -105,6 +104,69 @@ class Code
       life.cx ^= 1
     when :shl
       life.cx <<= 1
+    when :ifz
+      life.ip += 1 unless life.cx.zero?
+    when :jmp
+      i = life.ip + 1
+      template = find_template(life.map, i)
+      offset = template_offset(life.map[i..i+SEARCH_RANGE], template)
+
+      if offset
+        return life.ip = i + offset + template.size
+      else
+        @error = true
+      end
+    when :call
+      i = life.ip + 1
+      template = find_template(life.map, i)
+      offset = template_offset(life.map[i..i+SEARCH_RANGE], template)
+
+      if offset
+          life.stack.push life.ip
+          life.ip = i + offset + template.size
+        return
+      else
+        @error = true
+      end
+    when :jmpb
+      i = life.ip + 1
+      template = find_template(life.map, i)
+
+      start = life.ip - SEARCH_RANGE
+      start = 0 if start < 0
+      offset = template_offset(life.map[start..life.ip].reverse, template.reverse)
+
+      if offset
+        return life.ip = i - offset
+      else
+        @error = true
+      end
+    when :ret
+      life.ip = life.stack.pop
     end
+
+    life.ip += 1
+  end
+
+  private
+
+  def find_template(map, start)
+    template = []
+    i = 0
+    loop do
+      opcode = map[start + i]
+      break unless opcode == 0 || opcode == 1
+
+      template.push opcode^1
+      i += 1
+    end
+    template
+  end
+
+  def template_offset(map, template)
+    map.each_cons(template.size).with_index do |arr ,j|
+      return j if arr == template
+    end
+    nil
   end
 end
