@@ -211,6 +211,7 @@ class Code
     end
 
     life.ip += 1
+    life.error! unless life.range.include?(life.ip)
   end
 
   private

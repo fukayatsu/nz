@@ -13,7 +13,15 @@ class Life
     @daughter_range = nil
   end
   attr_accessor :map, :ip, :ax, :bx, :cx, :dx, :stack
-  attr_reader :gene, :daughter_range
+  attr_reader :gene, :range, :daughter_range
+
+  def error?
+    @error
+  end
+
+  def error!
+    @error = true
+  end
 
   def tick
     code = Code.new(map[ip])
@@ -26,7 +34,9 @@ class Life
     end
   end
 
-
+  def debug_print
+    puts "ax: #{ax}\tbx: #{bx}\tcx: #{cx}\tdx: #{dx}"
+  end
   class << self
     def default_gene
       [
