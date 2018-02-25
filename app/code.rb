@@ -143,6 +143,53 @@ class Code
       end
     when :ret
       life.ip = life.stack.pop
+    when :adr
+      i = life.ip + 1
+      template = find_template(life.map, i)
+
+      offset_f = template_offset(life.map[i..i+SEARCH_RANGE], template)
+
+      start = life.ip - SEARCH_RANGE
+      start = 0 if start < 0
+      offset_b = template_offset(life.map[start..life.ip].reverse, template.reverse)
+
+
+      if offset_f || offset_b
+        offset_f ||= SEARCH_RANGE
+        offset_b ||= SEARCH_RANGE
+        if offset_f < offset_b
+          life.ax = i + offset_f
+        else
+          life.ax = i - offset_b - template.size
+        end
+        life.cx = template.size
+      else
+        @error = true
+      end
+    when :adrf
+      i = life.ip + 1
+      template = find_template(life.map, i)
+      offset = template_offset(life.map[i..i+SEARCH_RANGE], template)
+      if offset
+        life.ax = i + offset
+        life.cx = template.size
+      else
+        @error = true
+      end
+    when :adrb
+      i = life.ip + 1
+      template = find_template(life.map, i)
+
+      start = life.ip - SEARCH_RANGE
+      start = 0 if start < 0
+      offset = template_offset(life.map[start..life.ip].reverse, template.reverse)
+
+      if offset
+        life.ax = i - offset - template.size
+        life.cx = template.size
+      else
+        @error = true
+      end
     end
 
     life.ip += 1

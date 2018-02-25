@@ -303,6 +303,37 @@ RSpec.describe Code do
           expect(life.ip).to eq(10)
         end
       end
+
+      # Biological and Sensory: 5
+      # :adr,    #(search outward  for template, put address in AX, template size in CX)
+      context 'adr' do
+        let(:life) { Life.new(map: [-1, -1, 0, 1, 0, 0, -1, -1, -1, 1, 0, 1, 1, -1], ip: 8) }
+        it do
+          expect(applied.ax).to eq 2
+          expect(applied.cx).to eq 4
+        end
+      end
+
+      # :adrb,   #(search backward for template, put address in AX, template size in CX)
+      context 'adrb' do
+        let(:life) { Life.new(map: [-1, -1, 0, 1, 0, 0, -1, -1, -1, 1, 0, 1, 1, -1], ip: 8) }
+        it do
+          expect(applied.ax).to eq 2
+          expect(applied.cx).to eq 4
+        end
+      end
+
+      # :adrf,   #(search forward  for template, put address in AX, template size in CX)
+      context 'adrf' do
+        let(:life) { Life.new(map: [-1, -1, 0, 1, 0, 0, -1, -1, -1, 1, 0, 1, 1, -1], ip: 1) }
+        it do
+          expect(applied.ax).to eq 9
+          expect(applied.cx).to eq 4
+        end
+      end
+
+      # :mal,    #(allocate amount of space specified in CX)
+      # :divide, #(cell division)
     end
   end
 end
