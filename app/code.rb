@@ -200,9 +200,14 @@ class Code
         (index...(index+life.cx)).each do |i|
           life.map[i] = -1
         end
+        @daughter_range = index...(index+life.cx)
       else
         @error = true
       end
+    when :devide
+      daughter = Life.new(map: life.map, ip: @daughter_range.first, gene: life.map(@daughter_range))
+      @daughter_range = nil
+      daughter
     end
 
     life.ip += 1

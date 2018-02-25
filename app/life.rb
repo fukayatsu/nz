@@ -8,14 +8,22 @@ class Life
 
     @stack = []
     @error = false
+
+    @range = ip...(ip+gene.size)
+    @daughter_range = nil
   end
   attr_accessor :map, :ip, :ax, :bx, :cx, :dx, :stack
-  attr_reader :gene
+  attr_reader :gene, :daughter_range
 
   def tick
     code = Code.new(map[ip])
-    code.apply(self)
-    nil # TODO devide時はnew lifeを返す
+    result = code.apply(self)
+    if result.is_a? Life
+      # NOTE: 増殖したとき
+      result
+    else
+      nil
+    end
   end
 
 

@@ -344,6 +344,15 @@ RSpec.describe Code do
       end
 
       # :divide, #(cell division)
+      context 'divide' do
+        let(:life) { Life.new(map: [-1, 0, 0, 0, nil, -1, nil, nil, nil, nil], ip: 1, gene: [0, 0, 0]) }
+        it do
+          described_class.new(:mal)
+          life.cx = 3
+          daughter = code.apply(life)
+          expect(life.daughter_range).to be_nil
+        end
+      end
     end
   end
 end
