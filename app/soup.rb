@@ -14,7 +14,6 @@ class Soup
 
   def tick(step)
     step.times do |step|
-      puts "[debug] step: #{step}"
       tick_one_step
       break if @lives.all?(&:error?)
     end
@@ -25,7 +24,6 @@ class Soup
     @lives.each do |life|
       next if life.error?
       daughter = life.tick
-      life.debug_print
       if daughter
         daughters.push(daughter)
       end

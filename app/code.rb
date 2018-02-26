@@ -66,8 +66,6 @@ class Code
   end
 
   def apply(life)
-    puts
-    puts "[debug][apply] #{opname}"
     case opname
     when :pushax
       life.stack.push life.ax
