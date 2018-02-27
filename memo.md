@@ -2,6 +2,7 @@
 - [Documentation for the Tierra Simulator](http://life.ou.edu/pubs/doc/index.html)
 
 # TODO
+- Fix jmp,etc to outward
 - logger
 - save lives to file
 - Fix Invalid instruction: -1

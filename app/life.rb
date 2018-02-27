@@ -37,6 +37,9 @@ class Life
     else
       nil
     end
+  rescue => e
+    error!
+    nil
   end
 
   class << self
@@ -54,7 +57,7 @@ class Life
             :mal,
             :call, :nop0, :nop0, :nop1, :nop1, # コピープロシージャ
             :divide,
-            :jmp, :nop1, :nop1, :nop0, :nop1, # 自己複製ループのアドレステンプレート
+            :jmpb, :nop1, :nop1, :nop0, :nop1, # 自己複製ループのアドレステンプレート
           :ifz, # ダミー
           :nop1, :nop1, :nop0, :nop0, # コピープロシージャ開始
             :pushax,

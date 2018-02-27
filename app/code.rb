@@ -75,6 +75,8 @@ class Code
       @opcode = rand(32)
     end
 
+    # puts "#{opname} #{life.ax || '-'} #{life.bx || '-'} #{life.cx || '-'} #{life.dx || '-'} "
+
     case opname
     when :pushax
       life.stack.push life.ax
@@ -238,6 +240,9 @@ class Code
 
     life.ip += 1
     life.error! unless life.range.include?(life.ip)
+  rescue
+    life.error!
+    nil
   end
 
   private

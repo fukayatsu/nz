@@ -35,7 +35,7 @@ class Soup
 
   def tick_one_step
     daughters = []
-    @lives[0...1].each do |life|
+    @lives.each do |life|
       next if life.error?
       daughter = life.tick
       daughters.push(daughter) if daughter
