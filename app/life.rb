@@ -11,9 +11,14 @@ class Life
     @error = false
 
     @range = ip...(ip+gene.size)
+    @division_count = 0
   end
   attr_accessor :map, :ip, :ax, :bx, :cx, :dx, :stack, :daughter_range
-  attr_reader :gene, :range, :name
+  attr_reader :gene, :range, :name, :division_count
+
+  def division!
+    @division_count += 1
+  end
 
   def error?
     @error

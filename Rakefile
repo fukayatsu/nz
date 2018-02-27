@@ -11,4 +11,6 @@ task :run do
     puts soup.lives_summary
     puts
   end
+
+  puts soup.gene_bank_summary
 end

@@ -1,4 +1,5 @@
 class Code
+  MUTATION_CYCLE = 10000
   SEARCH_RANGE = 300
   INSTRUCTIONS = [
     # No Operations: 2
@@ -66,7 +67,7 @@ class Code
   end
 
   def apply(life)
-    r = rand(2500)
+    r = rand(MUTATION_CYCLE)
     if r == 0
       life.ip += 1
       return
@@ -98,7 +99,7 @@ class Code
     when :movii # (move from ram [BX] to ram [AX])
       val = life.map[life.bx]
 
-      r = rand(2500)
+      r = rand(MUTATION_CYCLE)
       if r == 0
         life.ip += 1
         return
@@ -230,6 +231,7 @@ class Code
       daughter = Life.new(map: life.map, ip: life.daughter_range.first, gene: life.map[life.daughter_range])
       life.daughter_range = nil
       life.ip += 1
+      life.division!
       life.error! unless life.range.include?(life.ip)
       return daughter
     end
