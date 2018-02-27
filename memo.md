@@ -1,2 +1,7 @@
 - [Tierra 入門](http://web.archive.org/web/20001202002200/http://www.hip.atr.co.jp/~kim/TIERRA/tierra.html)
 - [Documentation for the Tierra Simulator](http://life.ou.edu/pubs/doc/index.html)
+
+# TODO
+- logger
+- save lives to file
+- Fix Invalid instruction: -1
