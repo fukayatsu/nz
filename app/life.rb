@@ -1,3 +1,4 @@
+require 'digest/md5'
 require_relative 'code'
 
 class Life
@@ -5,14 +6,14 @@ class Life
     @map   = map
     @ip    = ip
     @gene  = gene
-
+    @name  = "#{gene.size}-#{::Digest::MD5.hexdigest(@gene.join(','))}"
     @stack = []
     @error = false
 
     @range = ip...(ip+gene.size)
   end
   attr_accessor :map, :ip, :ax, :bx, :cx, :dx, :stack, :daughter_range
-  attr_reader :gene, :range
+  attr_reader :gene, :range, :name
 
   def error?
     @error

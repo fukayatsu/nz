@@ -5,6 +5,9 @@ task :run do
   require './app/soup'
 
   soup = Soup.new
-  soup.tick(800)
-  require "pry"; binding.pry
+
+  100.times do
+    soup.tick(1000)
+    puts soup.lives_summary
+  end
 end

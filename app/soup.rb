@@ -1,7 +1,7 @@
 require_relative 'life'
 
 class Soup
-  MAX_SIZE = 1000
+  MAX_SIZE = 30000
 
   def initialize
     @map = Array.new(MAX_SIZE)
@@ -10,6 +10,15 @@ class Soup
 
   def lives_count
     @lives.size
+  end
+
+  def lives_summary
+    summary = {}
+    @lives.each do |life|
+      summary[life.name] ||= 0
+      summary[life.name] += 1
+    end
+    summary.map { |k, v| "#{k}: #{v}" }.join("\n")
   end
 
   def tick(step)
