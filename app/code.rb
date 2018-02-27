@@ -66,6 +66,14 @@ class Code
   end
 
   def apply(life)
+    r = rand(2500)
+    if r == 0
+      life.ip += 1
+      return
+    elsif r == 1
+      @opcode = rand(32)
+    end
+
     case opname
     when :pushax
       life.stack.push life.ax
@@ -88,8 +96,18 @@ class Code
     when :movab
       life.bx = life.ax
     when :movii # (move from ram [BX] to ram [AX])
+      val = life.map[life.bx]
+
+      r = rand(2500)
+      if r == 0
+        life.ip += 1
+        return
+      elsif r == 1
+        val = rand(32)
+      end
+
       # TODO: 書き込み権限確認
-      life.map[life.ax] = life.map[life.bx]
+      life.map[life.ax] = val
     when :sub_ab
       life.cx = life.ax - life.bx
     when :sub_ac

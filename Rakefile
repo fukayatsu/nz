@@ -9,5 +9,6 @@ task :run do
   100.times do
     soup.tick(1000)
     puts soup.lives_summary
+    puts
   end
 end
