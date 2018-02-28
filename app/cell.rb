@@ -26,6 +26,12 @@ class Cell
     @error = true
   end
 
+  def can_write?(point)
+    return true if @range.include?(point)
+    return false unless @daughter_range
+    @daughter_range.include?(point)
+  end
+
   def tick
     code = Code.new(soup[ip])
     result = code.apply(self)
@@ -42,6 +48,14 @@ class Cell
   def next_ip
     @ip += 1
     error! if @ip >= soup.size
+  end
+
+  def jump_ip(ip)
+    if ip > soup.size || ip < 0
+      error!
+    else
+      @ip = ip
+    end
   end
 
   class << self

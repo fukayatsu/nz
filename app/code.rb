@@ -20,7 +20,11 @@ class Code
     when /pop(.)x/
       cell.send("#{$1}x=", cell.stack.pop)
     when :movii
-      # TODO
+      if cell.can_write?(cell.ax)
+        cell.soup[cell.ax] = cell.soup[cell.bx]
+      else
+        cell.error!
+      end
     when /mov(.)(.)/
       cell.send("#{$2}x=", cell.send("#{$1}x"))
     when :sub_ab
@@ -39,10 +43,40 @@ class Code
       cell.cx <<= 1
     when :ifz
       cell.ip += 1 unless cell.cx.zero?
-
+    when :jmp
+      template = find_template(cell)
+      distance = search_forward(cell, template)
+      return cell.jump_ip(cell.ip + distance)
+    when :jmpb
+      template = find_template(cell)
+      distance = search_backward(cell, template)
+      return cell.jump_ip(cell.ip - distance)
     end
 
     cell.next_ip
+  end
+
+  def find_template(cell)
+    cell.soup[cell.ip + 1, 10].take_while { |n| n == 0 || n == 1 }.map { |i| i ^= 1 }
+  end
+
+  def search_forward(cell, template)
+    sub_soup = cell.soup[cell.ip + 1, SEARCH_RANGE]
+    offset = sub_soup.index.with_index { |_, i| sub_soup[i, 4] == template }
+    return nil unless offset
+
+    offset + template.size + 1
+  end
+
+  def search_backward(cell, template)
+    start = cell.ip - SEARCH_RANGE
+    start = 0 if start < 0
+
+    sub_soup = cell.soup[start...cell.ip]
+    offset   = sub_soup.rindex.with_index { |_, i| sub_soup[i, 4] == template }
+    return nil unless offset
+
+    offset - template.size + 1
   end
 
   private
@@ -50,7 +84,7 @@ class Code
   def parse_instruction(instruction)
     if instruction.is_a?(Symbol)
       INSTRUCTIONS.index(instruction)
-    elsif 0 <= instruction && instruction <= 31
+    elsif instruction.ia_a?(Integer) && 0 <= instruction && instruction <= 31
       instruction
     else
       raise "Invalid instruction: #{instruction}"
