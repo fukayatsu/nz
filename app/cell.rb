@@ -22,6 +22,10 @@ class Cell
     @error
   end
 
+  def error!
+    @error = true
+  end
+
   def tick
     code = Code.new(soup[ip])
     result = code.apply(self)
@@ -33,6 +37,11 @@ class Cell
   # rescue
   #   @error = true
   #   nil
+  end
+
+  def next_ip
+    @ip += 1
+    error! if @ip >= soup.size
   end
 
   class << self

@@ -12,7 +12,7 @@ module Origin
         :mal,
         :call, :nop0, :nop0, :nop1, :nop1, # コピープロシージャ
         :divide,
-        :jmpb, :nop1, :nop1, :nop0, :nop1, # 自己複製ループのアドレステンプレート
+        :jmp, :nop1, :nop1, :nop0, :nop1, # 自己複製ループのアドレステンプレート
       :ifz, # ダミー
       :nop1, :nop1, :nop0, :nop0, # コピープロシージャ開始
         :pushax,
@@ -25,7 +25,7 @@ module Origin
             :jmp, :nop0, :nop1, :nop0, :nop0, # コピープロシージャ終了へ
           :inc_a,
           :inc_b,
-          :jmpb, :nop0, :nop1, :nop0, :nop1, # コピーループ続行
+          :jmp, :nop0, :nop1, :nop0, :nop1, # コピーループ続行
       :ifz, # ダミー
       :nop1, :nop0, :nop1, :nop1, # コピープロシージャ終了
       :popcx,

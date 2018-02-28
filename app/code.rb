@@ -1,6 +1,7 @@
 require_relative 'instruction'
 
 class Code
+  SEARCH_RANGE = 1000
   include Instruction
 
   def initialize(instruction)
@@ -22,7 +23,26 @@ class Code
       # TODO
     when /mov(.)(.)/
       cell.send("#{$2}x=", cell.send("#{$1}x"))
+    when :sub_ab
+      cell.cx = cell.ax - cell.bx
+    when :sub_ac
+      cell.ax = cell.ax - cell.cx
+    when /inc_(.)/
+      cell.send("#{$1}x+=", 1)
+    when /dec_(.)/
+      cell.send("#{$1}x-=", 1)
+    when :zero
+      cell.cx = 0
+    when :not0
+      cell.cx ^= 1
+    when :shl
+      cell.cx <<= 1
+    when :ifz
+      cell.ip += 1 unless cell.cx.zero?
+
     end
+
+    cell.next_ip
   end
 
   private

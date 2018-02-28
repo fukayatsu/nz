@@ -12,11 +12,11 @@ task :run do
       break
     end
 
-    if i % 1000 == 0
-      puts "step: #{i}"
-      puts world.lives_summary
-      puts
-    end
+    # if i % 1000 == 0
+    puts "step: #{i}"
+    # puts world.lives_summary
+    puts
+    # end
   end
 
   puts world.gene_bank_summary
