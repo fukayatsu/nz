@@ -47,15 +47,14 @@ class Cell
 
   def next_ip
     @ip += 1
-    error! if @ip >= soup.size
   end
 
-  def jump_ip(ip)
-    if ip > soup.size || ip < 0
-      error!
-    else
-      @ip = ip
-    end
+  def jump_ip(diff)
+    @ip += diff
+  end
+
+  def check_ip_range!
+    error! if @ip >= soup.size || @ip < 0
   end
 
   class << self

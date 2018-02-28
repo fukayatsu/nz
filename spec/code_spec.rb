@@ -82,14 +82,19 @@ RSpec.describe Code do
       end
 
       context 'backwards' do
-        let(:name) { :jmpb }
         let(:ip) { 11 }
         it do
           expect(applied_cell.ip).to eq(8)
         end
       end
 
-
+      context 'backwards(jmpb)' do
+      let(:name) { :jmpb }
+        let(:ip) { 11 }
+        it do
+          expect(applied_cell.ip).to eq(8)
+        end
+      end
     end
   end
 end

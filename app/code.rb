@@ -45,12 +45,17 @@ class Code
       cell.ip += 1 unless cell.cx.zero?
     when :jmp
       template = find_template(cell)
-      distance = search_forward(cell, template)
-      return cell.jump_ip(cell.ip + distance)
+      diff_f = search_forward(cell, template)
+      diff_b = search_backward(cell, template)
+
+      diff = [diff_f, diff_b].compact.min { |a, b| a.abs <=> b.abs }
+      return cell.error! unless diff
+      return cell.jump_ip(diff)
     when :jmpb
       template = find_template(cell)
-      distance = search_backward(cell, template)
-      return cell.jump_ip(cell.ip - distance)
+      diff = search_backward(cell, template)
+      return cell.error! unless diff
+      return cell.jump_ip(diff)
     end
 
     cell.next_ip
@@ -65,7 +70,7 @@ class Code
     offset = sub_soup.index.with_index { |_, i| sub_soup[i, 4] == template }
     return nil unless offset
 
-    offset + template.size + 1
+    template.size + offset + 1
   end
 
   def search_backward(cell, template)
@@ -76,7 +81,7 @@ class Code
     offset   = sub_soup.rindex.with_index { |_, i| sub_soup[i, 4] == template }
     return nil unless offset
 
-    offset - template.size + 1
+    template.size - offset -  1
   end
 
   private
