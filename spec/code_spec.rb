@@ -95,6 +95,77 @@ RSpec.describe Code do
           expect(applied_cell.ip).to eq(8)
         end
       end
+
+      context 'call' do
+        let(:name) { :call }
+        let(:ip) { 11 }
+        it do
+          expect(applied_cell.ip).to eq(8)
+          expect(cell.stack).to eq [11]
+        end
+      end
+    end
+
+    context 'ret' do
+      it do
+        cell.stack = [12]
+        expect(applied_cell.ip). to eq 12
+      end
+    end
+
+    context 'adr' do
+      let(:name) { :adr }
+      let(:soup) { [0,1,2,3,  0,0,1,0,  8,9,10,11, 1,1,0,1,  16] }
+
+      context 'forward 4' do
+        it do
+          cell.cx = 4
+          cell.ip = 3
+          expect(applied_cell.ax).to eq 16
+        end
+      end
+
+      context 'forward 3' do
+        it do
+          cell.cx = 3
+          cell.ip = 3
+          expect(applied_cell.ax).to eq 15
+        end
+      end
+
+      context 'backward 4' do
+        it do
+          cell.cx = 4
+          cell.ip = 11
+          expect(applied_cell.ax).to eq 8
+        end
+      end
+
+      context 'backward 3' do
+        it do
+          cell.cx = 3
+          cell.ip = 11
+          expect(applied_cell.ax).to eq 7
+        end
+      end
+
+      context 'forward adrf' do
+        let(:name) { :adrf }
+        it do
+          cell.cx = 4
+          cell.ip = 3
+          expect(applied_cell.ax).to eq 16
+        end
+      end
+
+      context 'backward adrb' do
+        let(:name) { :adrb }
+        it do
+          cell.cx = 4
+          cell.ip = 11
+          expect(applied_cell.ax).to eq 8
+        end
+      end
     end
   end
 end

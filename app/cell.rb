@@ -47,14 +47,22 @@ class Cell
 
   def next_ip
     @ip += 1
+    check_ip_range!
   end
 
   def jump_ip(diff)
+    return error! if diff.nil?
     @ip += diff
+    check_ip_range!
+  end
+
+  def ret_ip
+    @ip = stack.pop
+    check_ip_range!
   end
 
   def check_ip_range!
-    error! if @ip >= soup.size || @ip < 0
+    error! if !@ip.is_a?(Integer) || @ip >= soup.size || @ip < 0
   end
 
   class << self

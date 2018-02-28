@@ -45,29 +45,57 @@ class Code
       cell.ip += 1 unless cell.cx.zero?
     when :jmp
       template = find_template(cell)
-      diff_f = search_forward(cell, template)
-      diff_b = search_backward(cell, template)
-
-      diff = [diff_f, diff_b].compact.min { |a, b| a.abs <=> b.abs }
-      return cell.error! unless diff
+      diff     = search_outward(cell, template)
       return cell.jump_ip(diff)
     when :jmpb
       template = find_template(cell)
-      diff = search_backward(cell, template)
-      return cell.error! unless diff
+      diff     = search_backward(cell, template)
       return cell.jump_ip(diff)
+    when :call
+      template = find_template(cell)
+      diff     = search_outward(cell, template)
+      cell.stack.push(cell.ip)
+      return cell.jump_ip(diff)
+    when :ret
+      return cell.ret_ip
+    when :adr
+      template = find_template(cell, cx_size: true)
+      diff     = search_outward(cell, template)
+      cell.ax = cell.ip + diff
+    when :adrb
+      template = find_template(cell, cx_size: true)
+      diff     = search_backward(cell, template)
+      cell.ax = cell.ip + diff
+    when :adrf
+      template = find_template(cell, cx_size: true)
+      diff     = search_forward(cell, template)
+      cell.ax = cell.ip + diff
+    when :mal
+    when :divide
     end
 
     cell.next_ip
   end
 
-  def find_template(cell)
-    cell.soup[cell.ip + 1, 10].take_while { |n| n == 0 || n == 1 }.map { |i| i ^= 1 }
+  def find_template(cell, cx_size: false)
+    template = cell.soup[cell.ip + 1, 10].take_while { |n| n == 0 || n == 1 }.map { |i| i ^= 1 }
+    if cx_size
+      template.take(cell.cx)
+    else
+      template
+    end
+  end
+
+  def search_outward(cell, template)
+    diff_f = search_forward(cell, template)
+    diff_b = search_backward(cell, template)
+
+    diff = [diff_f, diff_b].compact.min { |a, b| a.abs <=> b.abs }
   end
 
   def search_forward(cell, template)
     sub_soup = cell.soup[cell.ip + 1, SEARCH_RANGE]
-    offset = sub_soup.index.with_index { |_, i| sub_soup[i, 4] == template }
+    offset = sub_soup.index.with_index { |_, i| sub_soup[i, template.size] == template }
     return nil unless offset
 
     template.size + offset + 1
@@ -78,7 +106,7 @@ class Code
     start = 0 if start < 0
 
     sub_soup = cell.soup[start...cell.ip]
-    offset   = sub_soup.rindex.with_index { |_, i| sub_soup[i, 4] == template }
+    offset   = sub_soup.rindex.with_index { |_, i| sub_soup[i, template.size] == template }
     return nil unless offset
 
     template.size - offset -  1
