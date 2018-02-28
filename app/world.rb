@@ -10,7 +10,17 @@ class World
   end
 
   def tick
-    true # 1つ以上の生物がいる
+    next_tick = false
+    daughters = []
+    @cells.each do |cell|
+      next if cell.error?
+
+      daughter = cell.tick
+      daughters.push(daughter) if daughter
+      next_tick = true
+    end
+    @cells += daughters
+    next_tick
   end
 
   def lives_summary
